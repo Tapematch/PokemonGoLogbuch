@@ -1,0 +1,17 @@
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Logbuch
+        </div>
+        <div class="panel-body">
+            <table class="tale table-striped">
+                <tr ng-show="showNewEntry">
+                    <loogbook-entry new="true"></loogbook-entry>
+                </tr>
+                <tr ng-repeat="entry in entries">
+                    <logbook-entry data="entry"></logbook-entry>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

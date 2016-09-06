@@ -1,0 +1,1 @@
+angular.module('PokemonGo', ['ui.router', 'ngStorage']);
