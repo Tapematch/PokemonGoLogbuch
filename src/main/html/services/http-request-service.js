@@ -1,18 +1,37 @@
 'use strict';
 
-function httpRequestService($http, $q){
+function httpRequestService($http, $q, principalService){
     return{
-        login: login
+        login: login,
+        getLogbookEntriesByUserId: getLogbookEntriesByUserId
     };
+
+    function getLogbookEntriesByUserId(id){
+        var deferred = $q.defer();
+
+        var identity = principalService.getIdentity();
+
+        var config = {
+            url: 'http://localhost/rest/logbookentry/user/' + id,
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + identity.sessionId,
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+
+        request(config, deferred);
+
+        return deferred.promise;
+    }
 
     function login(credentials){
         var deferred = $q.defer();
 
         var config = {
-            url: 'localhost:8080/rest/login',
+            url: 'http://localhost:8080/rest/login',
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer ' + identity.sessionId,
                 'Content-Type': 'application/json; charset=utf-8'
             },
             data: credentials
@@ -32,4 +51,4 @@ function httpRequestService($http, $q){
     }
 }
 
-angular.module('PokemonGo').factory('httpRequestService', httpRequestService);
+angular.module('PokemonGo').factory('httpRequestService', ['$http', '$q', 'principalService', httpRequestService]);

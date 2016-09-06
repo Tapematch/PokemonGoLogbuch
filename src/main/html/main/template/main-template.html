@@ -1,0 +1,62 @@
+<div class="col-lg-12">
+    <div class="panel">
+        <div class="panel-body">
+            <div style="float: left">
+                {{ username }}
+            </div>
+            <div style="float: right">
+                <button class="btn btn-default">Abmelden</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div style="float: left">
+                Logbuch
+            </div>
+            <div class="text-right">
+                <a href="" ng-click="mainCtrl.showNewEntry()"><span class="glyphicon glyphicon-plus" style="color: #ffffff"></span></a>
+            </div>
+        </div>
+        <div class="panel-body" style="padding: 0">
+            <table class="table table-striped" style="margin-bottom: 0">
+                <tr>
+                    <th>
+                       Datum
+                    </th>
+                    <th>
+                        Startzeit
+                    </th>
+                    <th>
+                        Endzeit
+                    </th>
+                    <th>
+                        Startlevel
+                    </th>
+                    <th>
+                        Level Up
+                    </th>
+                    <th>
+                        Start EP
+                    </th>
+                    <th>
+                        End EP
+                    </th>
+                    <th>
+                        Wegpunkte
+                    </th>
+                    <th>
+                        Arenen
+                    </th>
+                    <th>
+                        Pokemon
+                    </th>
+                    <th></th>
+                </tr>
+                <tr logbook-entry="" ng-show="showNewEntry"></tr>
+            </table>
+        </div>
+    </div>
+</div>

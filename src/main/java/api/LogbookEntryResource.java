@@ -1,11 +1,13 @@
 package api;
 
 import dto.LogbookEntryPutModel;
+import model.LogbookEntry;
 import service.LogbookEntryService;
 import service.interfaces.ILogbookEntryService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/logbookentry")
 public class LogbookEntryResource {
@@ -43,5 +45,14 @@ public class LogbookEntryResource {
         m_LogbookEntryService.deleteLogbookEntry(entryId);
 
         return Response.status(200).build();
+    }
+
+    @GET
+    @Path("user/{id}")
+    @Produces("application/json")
+    public Response getLogbookEntriesByUserId(@PathParam("id") int id){
+        List<LogbookEntry> entries = m_LogbookEntryService.getLogbookEntriesByUserId(id);
+
+        return Response.status(200).entity(entries).build();
     }
 }

@@ -1,10 +1,11 @@
 'use strict';
 
-function loginController($scope, $rootScope, $state, httpRequestService, authorizationService){
+function loginController($scope, $rootScope, $state, httpRequestService, principalService){
     var that = this;
 
     that.showError = showError;
     that.hideError = hideError;
+    that.login = login;
 
     initialize();
 
@@ -32,8 +33,14 @@ function loginController($scope, $rootScope, $state, httpRequestService, authori
 
         httpRequestService.login(credentials)
             .then(function(data) {
+                if (data === '' || data === null){
+                    $scope.loading = false;
+                    showError('Could not login.');
+                    return;
+                }
+
                 $scope.loading = false;
-                authorizationService.setIdentity(data);
+                principalService.setIdentity(data);
 
                 if ($rootScope.returnToState){
                     $state.go($rootScope.returnToState, $rootScope.returnToParams);
@@ -63,7 +70,7 @@ function loginDirective(){
             '$rootScope',
             '$state',
             'httpRequestService',
-            'authorizationService',
+            'principalService',
             loginController
         ],
         controllerAs: 'lgnCtrl',

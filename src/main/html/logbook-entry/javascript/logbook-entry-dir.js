@@ -9,7 +9,8 @@ function logbookEntryController($scope){
     initialize();
 
     function initialize(){
-        if ($scope.data){
+        if ($scope.item){
+            $scope.isInEditMode = false;
             var data = $scope.data;
 
             $scope.date = new Date(data.date);
@@ -30,7 +31,24 @@ function logbookEntryController($scope){
             setPokemons(data.pokemons);
 
             $scope.isInEditMode = false;
+        } else {
+            $scope.isInEditMode = true;
+            test();
         }
+    }
+
+    function test(){
+        var pokemons = [];
+        pokemons.push({name: 'Glumanda'}, {name: 'Glutexo'},{name: 'Glurak'}, {name: 'Amonitas'}, {name: 'Bisaflor'}, {name: 'Kapador'});
+        setPokemons(pokemons);
+
+        var arenas = [];
+        arenas.push({locationName: 'Deine Ecke'}, {locationName: 'Meine Ecke'}, {locationName: 'Unsere Ecke'});
+        setArenas(arenas);
+
+        var waypoints = [];
+        waypoints.push({locationName: 'Deine Ecke'}, {locationName: 'Meine Ecke'}, {locationName: 'Unsere Ecke'});
+        setWayPoints(waypoints);
     }
 
     function setWayPoints(waypoints){
@@ -84,10 +102,10 @@ function logbookEntryController($scope){
 
 function logbookEntryDirective(){
     return{
-        restrict: 'E',
+        restrict: 'A',
         scope:{
             data: '=',
-            new: '=',
+            item: '=logbookEntry',
             showWayPoints: '=?',
             showArenas: '=?',
             showPokemons: '=?',
@@ -101,7 +119,7 @@ function logbookEntryDirective(){
         },
         controller: logbookEntryController,
         controllerAs: 'lgbEntryCtrl',
-        template: 'loogbook-entry/template/loogbook-entry-template.html'
+        templateUrl: 'logbook-entry/template/logbook-entry-template.html'
     }
 }
 
