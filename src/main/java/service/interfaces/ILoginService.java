@@ -5,5 +5,7 @@ import dto.Identity;
 public interface ILoginService {
     Identity loginUser(String username, String password);
 
-    boolean sessionIdIsValid(String sessionId);
+    boolean sessionIdIsValid(int userId, String sessionId);
+
+    void logoutUser(int userId);
 }
