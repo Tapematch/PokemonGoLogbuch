@@ -2,7 +2,7 @@
 
 function appConfig($stateProvider, $urlRouterProvider, $locationProvider) {
 
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/main');
 
     $stateProvider
         .state('login', {
