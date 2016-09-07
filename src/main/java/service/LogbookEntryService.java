@@ -1,5 +1,6 @@
 package service;
 
+import com.mysql.jdbc.Statement;
 import model.*;
 import service.interfaces.ILogbookEntryService;
 
@@ -96,7 +97,7 @@ public class LogbookEntryService implements ILogbookEntryService {
         Connection conn = DBHelper.getConnection();
         if(conn!=null) {
 
-            PreparedStatement insert = conn.prepareStatement("INSERT INTO logbookentry (UserId, Date, Starttime, Endtime, Startlevel, LevelUp, StartEp, EndEp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement insert = conn.prepareStatement("INSERT INTO logbookentry (UserId, Date, Starttime, Endtime, Startlevel, LevelUp, StartEp, EndEp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             insert.setInt(1, entry.getUserId());
             insert.setDate(2, entry.getDate());
             insert.setTime(3, entry.getStarttime());
@@ -106,50 +107,14 @@ public class LogbookEntryService implements ILogbookEntryService {
             insert.setInt(7, entry.getStartEp());
             insert.setInt(8, entry.getEndEp());
             insert.executeUpdate();
-            insert.close();
-
 
             ResultSet tableKeys = insert.getGeneratedKeys();
             tableKeys.next();
-            int entryId = tableKeys.getInt(1);
+            entry.setId(tableKeys.getInt(1));
 
-            for (WayPoint wayPoint : entry.getWayPoints()) {
-                PreparedStatement insertWayPoint = conn.prepareStatement("INSERT INTO waypoint (Number, EntryId, Time, Coordinates, LocationName) VALUES (?, ?, ?, ?, ?)");
-                insertWayPoint.setInt(1, wayPoint.getNumber());
-                insertWayPoint.setInt(2, entryId);
-                insertWayPoint.setTime(3, wayPoint.getTime());
-                insertWayPoint.setString(4, wayPoint.getCoordinates());
-                insertWayPoint.setString(5, wayPoint.getLocationName());
-                insertWayPoint.executeUpdate();
-                insertWayPoint.close();
-            }
+            insert.close();
 
-            for (Pokemon pokemon : entry.getPokemon()) {
-                PreparedStatement insertPokemon = conn.prepareStatement("INSERT INTO pokemon (Number, EntryId, Name, Time, Coordinates, Wp, LocationName) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                insertPokemon.setInt(1, pokemon.getNumber());
-                insertPokemon.setInt(2, entryId);
-                insertPokemon.setString(3, pokemon.getName());
-                insertPokemon.setTime(4, pokemon.getTime());
-                insertPokemon.setString(5, pokemon.getCoordinates());
-                insertPokemon.setInt(6, pokemon.getWp());
-                insertPokemon.setString(7, pokemon.getLocationName());
-                insertPokemon.executeUpdate();
-                insertPokemon.close();
-            }
-
-            for (Gym gym : entry.getGyms()) {
-                PreparedStatement insertGym = conn.prepareStatement("INSERT INTO gym (Number, EntryId,  Time, Coordinates, LocationName, Level, Team, Win) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-                insertGym.setInt(1, gym.getNumber());
-                insertGym.setInt(2, entryId);
-                insertGym.setTime(3, gym.getTime());
-                insertGym.setString(4, gym.getCoordinates());
-                insertGym.setString(5, gym.getLocationName());
-                insertGym.setInt(6, gym.getLevel());
-                insertGym.setString(7, gym.getTeam().name());
-                insertGym.setBoolean(8, gym.isWin());
-                insertGym.executeUpdate();
-                insertGym.close();
-            }
+            insertLinkedItems(conn, entry);
 
             conn.close();
         }
@@ -157,6 +122,33 @@ public class LogbookEntryService implements ILogbookEntryService {
 
     @Override
     public void updateLogbookEntry(LogbookEntry entry) throws SQLException, ReflectiveOperationException {
+
+        Connection conn = DBHelper.getConnection();
+        if(conn!=null) {
+
+            int entryId = entry.getId();
+
+            PreparedStatement update = conn.prepareStatement("UPDATE logbookentry SET UserId=?, Date=?, Starttime=?, Endtime=?, Startlevel=?, LevelUp=?, StartEp=?, EndEp=? WHERE Id=?");
+            update.setInt(1, entry.getUserId());
+            update.setDate(2, entry.getDate());
+            update.setTime(3, entry.getStarttime());
+            update.setTime(4, entry.getEndtime());
+            update.setInt(5, entry.getStartlevel());
+            update.setBoolean(6, entry.isLevelUp());
+            update.setInt(7, entry.getStartEp());
+            update.setInt(8, entry.getEndEp());
+            update.setInt(9, entryId);
+            update.executeUpdate();
+            update.close();
+
+            deleteLinkedItems(conn, entryId);
+            insertLinkedItems(conn, entry);
+
+            conn.close();
+        }
+
+
+
         deleteLogbookEntry(entry.getId());
         addLogbookEntry(entry);
     }
@@ -172,22 +164,66 @@ public class LogbookEntryService implements ILogbookEntryService {
             delete.executeUpdate();
             delete.close();
 
-            PreparedStatement deleteWayPoints = conn.prepareStatement("DELETE FROM waypoint WHERE EntryId=?");
-            deleteWayPoints.setInt(1, entryId);
-            deleteWayPoints.executeUpdate();
-            deleteWayPoints.close();
-
-            PreparedStatement deletePokemon = conn.prepareStatement("DELETE FROM pokemon WHERE EntryId=?");
-            deletePokemon.setInt(1, entryId);
-            deletePokemon.executeUpdate();
-            deletePokemon.close();
-
-            PreparedStatement deleteGyms = conn.prepareStatement("DELETE FROM gym WHERE EntryId=?");
-            deleteGyms.setInt(1, entryId);
-            deleteGyms.executeUpdate();
-            deleteGyms.close();
+            deleteLinkedItems(conn, entryId);
 
             conn.close();
+        }
+    }
+
+    private void deleteLinkedItems(Connection conn, int entryId) throws SQLException {
+        PreparedStatement deleteWayPoints = conn.prepareStatement("DELETE FROM waypoint WHERE EntryId=?");
+        deleteWayPoints.setInt(1, entryId);
+        deleteWayPoints.executeUpdate();
+        deleteWayPoints.close();
+
+        PreparedStatement deletePokemon = conn.prepareStatement("DELETE FROM pokemon WHERE EntryId=?");
+        deletePokemon.setInt(1, entryId);
+        deletePokemon.executeUpdate();
+        deletePokemon.close();
+
+        PreparedStatement deleteGyms = conn.prepareStatement("DELETE FROM gym WHERE EntryId=?");
+        deleteGyms.setInt(1, entryId);
+        deleteGyms.executeUpdate();
+        deleteGyms.close();
+    }
+
+    private void insertLinkedItems(Connection conn, LogbookEntry entry) throws SQLException {
+        for (WayPoint wayPoint : entry.getWayPoints()) {
+            PreparedStatement insertWayPoint = conn.prepareStatement("INSERT INTO waypoint (Number, EntryId, Time, Coordinates, LocationName) VALUES (?, ?, ?, ?, ?)");
+            insertWayPoint.setInt(1, wayPoint.getNumber());
+            insertWayPoint.setInt(2, entry.getId());
+            insertWayPoint.setTime(3, wayPoint.getTime());
+            insertWayPoint.setString(4, wayPoint.getCoordinates());
+            insertWayPoint.setString(5, wayPoint.getLocationName());
+            insertWayPoint.executeUpdate();
+            insertWayPoint.close();
+        }
+
+        for (Pokemon pokemon : entry.getPokemon()) {
+            PreparedStatement insertPokemon = conn.prepareStatement("INSERT INTO pokemon (Number, EntryId, Name, Time, Coordinates, Wp, LocationName) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            insertPokemon.setInt(1, pokemon.getNumber());
+            insertPokemon.setInt(2, entry.getId());
+            insertPokemon.setString(3, pokemon.getName());
+            insertPokemon.setTime(4, pokemon.getTime());
+            insertPokemon.setString(5, pokemon.getCoordinates());
+            insertPokemon.setInt(6, pokemon.getWp());
+            insertPokemon.setString(7, pokemon.getLocationName());
+            insertPokemon.executeUpdate();
+            insertPokemon.close();
+        }
+
+        for (Gym gym : entry.getGyms()) {
+            PreparedStatement insertGym = conn.prepareStatement("INSERT INTO gym (Number, EntryId,  Time, Coordinates, LocationName, Level, Team, Win) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            insertGym.setInt(1, gym.getNumber());
+            insertGym.setInt(2, entry.getId());
+            insertGym.setTime(3, gym.getTime());
+            insertGym.setString(4, gym.getCoordinates());
+            insertGym.setString(5, gym.getLocationName());
+            insertGym.setInt(6, gym.getLevel());
+            insertGym.setString(7, gym.getTeam().name());
+            insertGym.setBoolean(8, gym.isWin());
+            insertGym.executeUpdate();
+            insertGym.close();
         }
     }
 }
