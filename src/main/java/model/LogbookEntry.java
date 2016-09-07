@@ -18,8 +18,8 @@ public class LogbookEntry {
     private List<Pokemon> pokemon;
     private List<Gym> gyms;
 
-    public LogbookEntry(int id) {
-        this.id = id;
+    public LogbookEntry() {
+
     }
 
     public int getId() {

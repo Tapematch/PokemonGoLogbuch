@@ -23,7 +23,8 @@ public class LogbookEntryService implements ILogbookEntryService {
             while (rs.next()){
                 int entryId = rs.getInt(1);
 
-                LogbookEntry entry = new LogbookEntry(entryId);
+                LogbookEntry entry = new LogbookEntry();
+                entry.setId(entryId);
                 entry.setUserId(userId);
                 entry.setDate(rs.getDate(2));
                 entry.setStarttime(rs.getTime(3));
