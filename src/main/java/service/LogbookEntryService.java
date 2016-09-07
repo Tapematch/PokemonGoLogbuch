@@ -90,17 +90,99 @@ public class LogbookEntryService implements ILogbookEntryService {
     }
 
     @Override
-    public void addLogbookEntry(int userId, LogbookEntry entry) {
+    public void addLogbookEntry(LogbookEntry entry) throws SQLException, ReflectiveOperationException {
 
+        Connection conn = DBHelper.getConnection();
+        if(conn!=null) {
+
+            PreparedStatement insert = conn.prepareStatement("INSERT INTO logbookentry (Id, UserId, Date, Starttime, Endtime, Startlevel, LevelUp, StartEp, EndEp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            insert.setInt(1, entry.getId());
+            insert.setInt(2, entry.getUserId());
+            insert.setDate(3, entry.getDate());
+            insert.setTime(4, entry.getStarttime());
+            insert.setTime(5, entry.getEndtime());
+            insert.setInt(6, entry.getStartlevel());
+            insert.setBoolean(7, entry.isLevelUp());
+            insert.setInt(8, entry.getStartEp());
+            insert.setInt(9, entry.getEndEp());
+            insert.executeUpdate();
+            insert.close();
+
+            for (WayPoint wayPoint : entry.getWayPoints()) {
+                PreparedStatement insertWayPoint = conn.prepareStatement("INSERT INTO waypoint (Number, EntryId, Time, Coordinates, LocationName) VALUES (?, ?, ?, ?, ?)");
+                insertWayPoint.setInt(1, wayPoint.getNumber());
+                insertWayPoint.setInt(2, entry.getId());
+                insertWayPoint.setTime(3, wayPoint.getTime());
+                insertWayPoint.setString(4, wayPoint.getCoordinates());
+                insertWayPoint.setString(5, wayPoint.getLocationName());
+                insertWayPoint.executeUpdate();
+                insertWayPoint.close();
+            }
+
+            for (Pokemon pokemon : entry.getPokemon()) {
+                PreparedStatement insertPokemon = conn.prepareStatement("INSERT INTO pokemon (Number, EntryId, Name, Time, Coordinates, Wp, LocationName) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                insertPokemon.setInt(1, pokemon.getNumber());
+                insertPokemon.setInt(2, entry.getId());
+                insertPokemon.setString(3, pokemon.getName());
+                insertPokemon.setTime(4, pokemon.getTime());
+                insertPokemon.setString(5, pokemon.getCoordinates());
+                insertPokemon.setInt(6, pokemon.getWp());
+                insertPokemon.setString(7, pokemon.getLocationName());
+                insertPokemon.executeUpdate();
+                insertPokemon.close();
+            }
+
+            for (Gym gym : entry.getGyms()) {
+                PreparedStatement insertGym = conn.prepareStatement("INSERT INTO gym (Number, EntryId,  Time, Coordinates, LocationName, Level, Team, Win) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                insertGym.setInt(1, gym.getNumber());
+                insertGym.setInt(2, entry.getId());
+                insertGym.setTime(3, gym.getTime());
+                insertGym.setString(4, gym.getCoordinates());
+                insertGym.setString(5, gym.getLocationName());
+                insertGym.setInt(6, gym.getLevel());
+                insertGym.setString(7, gym.getTeam().name());
+                insertGym.setBoolean(8, gym.isWin());
+                insertGym.executeUpdate();
+                insertGym.close();
+            }
+
+            conn.close();
+        }
     }
 
     @Override
-    public void updateLogbookEntry(int userId, LogbookEntry entry) {
-
+    public void updateLogbookEntry(LogbookEntry entry) throws SQLException, ReflectiveOperationException {
+        deleteLogbookEntry(entry.getId());
+        addLogbookEntry(entry);
     }
 
     @Override
-    public void deleteLogbookEntry(int entryId) {
+    public void deleteLogbookEntry(int entryId) throws SQLException, ReflectiveOperationException {
 
+        Connection conn = DBHelper.getConnection();
+
+        if(conn!=null) {
+            PreparedStatement delete = conn.prepareStatement("DELETE FROM logbookentry WHERE Id=?");
+            delete.setInt(1, entryId);
+            delete.executeUpdate();
+            delete.close();
+
+            PreparedStatement deleteWayPoints = conn.prepareStatement("DELETE FROM waypoint WHERE EntryId=?");
+            deleteWayPoints.setInt(1, entryId);
+            deleteWayPoints.executeUpdate();
+            deleteWayPoints.close();
+
+            PreparedStatement deletePokemon = conn.prepareStatement("DELETE FROM pokemon WHERE EntryId=?");
+            deletePokemon.setInt(1, entryId);
+            deletePokemon.executeUpdate();
+            deletePokemon.close();
+
+            PreparedStatement deleteGyms = conn.prepareStatement("DELETE FROM gym WHERE EntryId=?");
+            deleteGyms.setInt(1, entryId);
+            deleteGyms.executeUpdate();
+            deleteGyms.close();
+
+            conn.close();
+        }
     }
 }
