@@ -1,6 +1,6 @@
 'use strict';
 
-function logbookEntryController($scope, dateService){
+function logbookEntryController($scope, dateService, principalService, httpRequestService){
     var that = this;
     that.showWayPoints = showWayPoints;
     that.showArenas = showArenas;
@@ -22,6 +22,7 @@ function logbookEntryController($scope, dateService){
             $scope.isInEditMode = false;
             var data = $scope.item;
 
+            $scope.id = data.id;
             $scope.date = dateService.getDate(data.date, false);
             $scope.startTime = dateService.getDate(data.startTime, true);
             $scope.endTime = dateService.getDate(data.endTime, true);
@@ -45,6 +46,7 @@ function logbookEntryController($scope, dateService){
             $scope.newWaypointsList = data.waypoints;
             $scope.newArenasList = data.arenas;
         } else {
+            $scope.id = 0;
             $scope.isInEditMode = true;
             $scope.newDate = '';
             $scope.newStartTime = '';
@@ -60,39 +62,31 @@ function logbookEntryController($scope, dateService){
     }
 
     function save(){
-        if($scope.item){
-            $scope.date = dateService.getDate(dateService.getTimestamp($scope.newDate), false);
-            $scope.startTime = dateService.getDate(dateService.getTimestamp($scope.newStartTime), true);
-            $scope.endTime = dateService.getDate(dateService.getTimestamp($scope.newEndTime), true);
-            $scope.startLevel = $scope.newStartLevel;
-            $scope.startEp = $scope.newStartEp;
-            $scope.endEp = $scope.newEndEp;
-            $scope.levelUp = $scope.newLevelUp;
-            $scope.pokemonsList = $scope.newPokemonsList;
-            $scope.waypointsList = $scope.newWaypointsList;
-            $scope.arenasList = $scope.newArenasList;
+        $scope.mainController.hideError();
+        $scope.mainController.hideInfo();
 
-            setWayPoints($scope.waypointsList);
+        var entry = {
+            id: $scope.id,
+            userId: principalService.getIdentity().id,
+            date: dateService.getTimestamp($scope.newDate),
+            starttime: dateService.getTimestamp($scope.newStartTime),
+            endtime: dateService.getTimestamp($scope.newEndTime),
+            startlevel: $scope.newStartLevel,
+            levelUp: $scope.newLevelUp,
+            startEp: $scope.newStartEp,
+            endEp: $scope.newEndEp,
+            waypoints: $scope.newWaypointsList,
+            gyms: $scope.newArenasList,
+            pokemon: $scope.newPokemonsList
+        };
 
-            $scope.isInEditMode = false;
-        } else{
-            var entry = {
-                date: dateService.getTimestamp($scope.newDate),
-                startTime: dateService.getTimestamp($scope.newStartTime),
-                endTime: dateService.getTimestamp($scope.newEndTime),
-                startLevel: $scope.newStartLevel,
-                startEp: $scope.newStartEp,
-                endEp: $scope.newEndEp,
-                levelUp: $scope.newLevelUp,
-                waypoints: $scope.newWaypointsList,
-                arenas: $scope.newArenasList,
-                pokemons: $scope.newPokemonsList
-            };
-
-            $scope.mainController.addEntry(entry);
-
-            $scope.mainController.hideNewEntry();
-        }
+        httpRequestService.addLogbookEntry(entry)
+            .then(function(){
+                $scope.mainController.showInfo('Eintrag erfolgreich gespeichert.');
+                $scope.mainController.loadEntries();
+            }, function(error){
+                $scope.mainController.showError('Eintrag konnte nicht gespeichert werden: ' + error);
+            });
     }
 
     function edit(){
@@ -100,50 +94,26 @@ function logbookEntryController($scope, dateService){
     }
 
     function cancel(){
-        if($scope.item){
-            $scope.isInEditMode = false;
-        } else{
+        if ($scope.item){
+            $scope.mainController.loadEntries();
+        }
+        else{
+            resetnew();
             $scope.mainController.hideNewEntry();
         }
-
-        resetnew();
     }
 
-    function resetnew(){
-        if ($scope.item){
-            $scope.newDate = dateService.getDate(dateService.getTimestamp($scope.date), false);
-            $scope.newStartTime = dateService.getDate(dateService.getTimestamp($scope.startTime), true);
-            $scope.newEndTime = dateService.getDate(dateService.getTimestamp($scope.endTime), true);
-            $scope.newStartLevel = $scope.startLevel;
-            $scope.newStartEp = $scope.startEp;
-            $scope.newEndEp = $scope.endEp;
-            $scope.newLevelUp = $scope.levelUp;
-        } else{
-            $scope.newDate = '';
-            $scope.newStartTime = '';
-            $scope.newEndTime = '';
-            $scope.newStartLevel = '';
-            $scope.newStartEp = '';
-            $scope.newEndEp = '';
-            $scope.newLevelUp = false;
-            $scope.newPokemonsList = [];
-            $scope.newWaypointsList = [];
-            $scope.newArenasList = [];
-        }
-    }
-
-    function test(){
-        var pokemons = [];
-        pokemons.push({name: 'Glumanda'}, {name: 'Glutexo'},{name: 'Glurak'}, {name: 'Amonitas'}, {name: 'Bisaflor'}, {name: 'Kapador'});
-        setPokemons(pokemons);
-
-        var arenas = [];
-        arenas.push({locationName: 'Deine Ecke'}, {locationName: 'Meine Ecke'}, {locationName: 'Unsere Ecke'});
-        setArenas(arenas);
-
-        var waypoints = [];
-        waypoints.push({locationName: 'Deine Ecke'}, {locationName: 'Meine Ecke'}, {locationName: 'Unsere Ecke'});
-        setWayPoints(waypoints);
+    function resetnew() {
+        $scope.newDate = '';
+        $scope.newStartTime = '';
+        $scope.newEndTime = '';
+        $scope.newStartLevel = '';
+        $scope.newStartEp = '';
+        $scope.newEndEp = '';
+        $scope.newLevelUp = false;
+        $scope.newPokemonsList = [];
+        $scope.newWaypointsList = [];
+        $scope.newArenasList = [];
     }
 
     function showWaypoint(waypoint){
@@ -157,7 +127,7 @@ function logbookEntryController($scope, dateService){
     }
 
     function showNewPokemon(){
-        var pokemon = {};
+        var pokemon = { userId: principalService.getIdentity().id };
         $scope.newPokemonsList.push(pokemon);
 
         $scope.mainController.showPokemon(pokemon, true, $scope.newPokemonsList);
@@ -174,7 +144,7 @@ function logbookEntryController($scope, dateService){
     }
 
     function showNewArena(){
-        var arena = {};
+        var arena = { userId: principalService.getIdentity().id };
         $scope.newArenasList.push(arena);
 
         $scope.mainController.showArena(arena, true, $scope.newArenasList);
@@ -191,7 +161,7 @@ function logbookEntryController($scope, dateService){
     }
 
     function showNewWaypoint(){
-        var waypoint = {};
+        var waypoint = { userId: principalService.getIdentity().id };
         $scope.newWaypointsList.push(waypoint);
 
         $scope.mainController.showWaypoint(waypoint, true, $scope.newWaypointsList);
@@ -280,7 +250,7 @@ function logbookEntryDirective(){
             pokemonsList: '=?',
             isInEditMode: '=?'
         },
-        controller: ['$scope', 'dateService', logbookEntryController],
+        controller: ['$scope', 'dateService', 'principalService', 'httpRequestService', logbookEntryController],
         controllerAs: 'lgbEntryCtrl',
         templateUrl: 'logbook-entry/template/logbook-entry-template.html',
         link:{

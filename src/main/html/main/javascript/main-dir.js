@@ -1,6 +1,6 @@
 'use strict';
 
-function mainController($scope, httpRequestService, principalService, waypointService, arenaService, pokemonService){
+function mainController($scope, $state, httpRequestService, principalService, waypointService, arenaService, pokemonService){
     var that = this;
     that.showWaypoint = showWaypoint;
     that.hideWaypoint = hideWaypoint;
@@ -11,10 +11,15 @@ function mainController($scope, httpRequestService, principalService, waypointSe
     that.showPokemon = showPokemon;
     that.hidePokemon = hidePokemon;
     that.deletePokemon = deletePokemon;
+    that.showError = showError;
     that.hideError = hideError;
+    that.showInfo = showInfo;
+    that.hideInfo = hideInfo;
     that.showNewEntry = showNewEntry;
     that.addEntry = addEntry;
     that.hideNewEntry = hideNewEntry;
+    that.logout = logout;
+    that.loadEntries = loadEntries;
 
     initialize();
 
@@ -47,18 +52,15 @@ function mainController($scope, httpRequestService, principalService, waypointSe
     }
 
     function loadEntries(){
-        $scope.loading = true;
         $scope.entries = [];
 
-        var userId = principalService.getIdentity().userId;
+        var userId = principalService.getIdentity().id;
 
         httpRequestService.getLogbookEntriesByUserId(userId)
             .then(function(entries){
                 $scope.entries = entries;
-                $scope.loading = false;
             }, function(error){
                 showError(error);
-                $scope.loading = false;
             });
     }
 
@@ -157,6 +159,16 @@ function mainController($scope, httpRequestService, principalService, waypointSe
         $scope.waypointsList = [];
     }
 
+    function showInfo(info){
+        $scope.info = info;
+        $scope.showInfo = true;
+    }
+
+    function hideInfo(){
+        $scope.info = '';
+        $scope.showInfo = false;
+    }
+
     function showError(error){
         $scope.error = error;
         $scope.showError = true;
@@ -169,6 +181,11 @@ function mainController($scope, httpRequestService, principalService, waypointSe
 
     function showNewEntry(){
         $scope.showNewEntry = true;
+    }
+
+    function logout(){
+        principalService.setIdentity(null);
+        $state.go('login');
     }
 }
 
@@ -185,7 +202,7 @@ function mainDirective(){
             activeWaypoint: '=?',
             isNewWaypoint: '=?'
         },
-        controller: ['$scope', 'httpRequestService', 'principalService', 'waypointService', mainController],
+        controller: ['$scope', '$state', 'httpRequestService', 'principalService', 'waypointService', mainController],
         controllerAs: 'mainCtrl',
         templateUrl: 'main/template/main-template.html'
     }

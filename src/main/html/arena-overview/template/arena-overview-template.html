@@ -6,6 +6,9 @@
         <table class="table table-striped">
             <tr>
                 <th>
+                    Nummer
+                </th>
+                <th>
                     Zeit
                 </th>
                 <th>
@@ -26,6 +29,9 @@
             </tr>
             <tr ng-show="isInEditMode">
                 <td>
+                    <input type="text" ng-model="newNumber"/>
+                </td>
+                <td>
                     <input type="text" ng-model="newTime"/>
                 </td>
                 <td>
@@ -45,6 +51,9 @@
                 </td>
             </tr>
             <tr ng-show="!isInEditMode">
+                <td>
+                    {{ data.number }}
+                </td>
                 <td>
                     <label>{{ data.time | date:'dd.MM.yyyy HH:mm:ss'}}</label>
                 </td>

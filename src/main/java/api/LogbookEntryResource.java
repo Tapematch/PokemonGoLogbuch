@@ -5,9 +5,11 @@ import model.LogbookEntry;
 import service.LogbookEntryService;
 import service.interfaces.ILogbookEntryService;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import java.sql.SQLException;
 import java.util.List;
 
 @Path("/logbookentry")
@@ -24,9 +26,14 @@ public class LogbookEntryResource {
     @Consumes("application/json")
     @Produces("application/json")
     public Response addLogbookEntry(LogbookEntryPutModel model){
-        m_LogbookEntryService.addLogbookEntry(model.getUserId(), model.getEntry());
+        try{
+            m_LogbookEntryService.addLogbookEntry(model.toLogbookEntry());
 
-        return Response.status(200).build();
+            return Response.status(200).build();
+        } catch (Exception exception){
+            return Response.status(500).entity(exception.getMessage()).build();
+        }
+
     }
 
     @PUT
@@ -34,26 +41,48 @@ public class LogbookEntryResource {
     @Consumes("application/json")
     @Produces("application/json")
     public Response updateLogbookEntry(LogbookEntryPutModel model){
-        m_LogbookEntryService.updateLogbookEntry(model.getUserId(), model.getEntry());
+        try{
+            m_LogbookEntryService.updateLogbookEntry(model.toLogbookEntry());
 
-        return Response.status(200).build();
+            return Response.status(200).build();
+        } catch (Exception exception){
+            return Response.status(500).entity(exception.getMessage()).build();
+        }
     }
 
     @DELETE
     @Consumes("application/json")
     @Produces("application/json")
     public Response deleteLogbookEntry(int entryId){
-        m_LogbookEntryService.deleteLogbookEntry(entryId);
+        try{
+            m_LogbookEntryService.deleteLogbookEntry(entryId);
 
-        return Response.status(200).build();
+            return Response.status(200).build();
+        } catch (Exception exception){
+            return Response.status(500).entity(exception.getMessage()).build();
+        }
     }
 
     @GET
     @Path("user/{id}")
     @Produces("application/json")
-    public Response getLogbookEntriesByUserId(@PathParam("id") int id) throws SQLException, ReflectiveOperationException {
-        List<LogbookEntry> entries = m_LogbookEntryService.getLogbookEntriesByUserId(id);
+    public Response getLogbookEntriesByUserId(@PathParam("id") int id) {
+        try{
+            List<LogbookEntry> entries = m_LogbookEntryService.getLogbookEntriesByUserId(id);
 
-        return Response.status(200).entity(entries).build();
+            return Response.status(200).entity(getEntriesAsJson(entries)).build();
+        } catch (Exception exception){
+            return Response.status(500).entity(exception.getMessage()).build();
+        }
+    }
+
+    private JsonArray getEntriesAsJson(List<LogbookEntry> entries){
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+
+        for (LogbookEntry entry : entries){
+            builder.add(entry.toJson());
+        }
+
+        return builder.build();
     }
 }
