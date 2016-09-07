@@ -1,6 +1,8 @@
 package model;
 
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import java.sql.Date;
 
 /**
@@ -55,5 +57,14 @@ public class User {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public JsonObject toJson() {
+        return Json.createObjectBuilder()
+                .add("id", id)
+                .add("username", username)
+                .add("team", team.toString())
+                .add("startdate", startdate.getTime())
+                .add("sessionId", sessionId).build();
     }
 }

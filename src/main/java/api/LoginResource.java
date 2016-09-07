@@ -27,7 +27,7 @@ public class LoginResource {
         try{
             User user = m_LoginService.loginUser(credentials.getUsername(), credentials.getPassword());
 
-            return Response.status(200).entity(user).build();
+            return Response.status(200).entity(user.toJson()).build();
         }
         catch (Exception exception){
             return Response.status(500).entity(exception.getMessage()).build();
