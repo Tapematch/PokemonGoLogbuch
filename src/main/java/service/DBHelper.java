@@ -24,6 +24,8 @@ class DBHelper {
         String url = "jdbc:mysql://"+hostname+":"+port+"/"+dbname;
         connection = DriverManager.getConnection(url, user, password);
 
+        connection.setAutoCommit(false);
+
         return connection;
     }
 }
