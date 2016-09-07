@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Date;
+import java.sql.Time;
 
 /**
  * Created by philt on 07.09.2016.
@@ -9,7 +9,7 @@ public class Pokemon {
     private int number;
     private int userId;
     private String name;
-    private Date time;
+    private Time time;
     private String coordinates;
     private String locationName;
     private int wp;
@@ -43,11 +43,11 @@ public class Pokemon {
         this.name = name;
     }
 
-    public Date getTime() {
+    public Time getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(Time time) {
         this.time = time;
     }
 

@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Date;
+import java.sql.Time;
 
 /**
  * Created by philt on 07.09.2016.
@@ -8,7 +8,7 @@ import java.util.Date;
 public class Gym {
     private int number;
     private int userId;
-    private Date time;
+    private Time time;
     private String coordinates;
     private String locationName;
     private int level;
@@ -36,11 +36,11 @@ public class Gym {
         this.userId = userId;
     }
 
-    public Date getTime() {
+    public Time getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(Time time) {
         this.time = time;
     }
 

@@ -1,11 +1,14 @@
 package model;
 
+import java.sql.Time;
+
 /**
  * Created by philt on 07.09.2016.
  */
 public class WayPoint {
     private int number;
     private int userId;
+    private Time time;
     private String coordinates;
     private String locationName;
 
@@ -28,6 +31,14 @@ public class WayPoint {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public Time getTime() {
+        return time;
+    }
+
+    public void setTime(Time time) {
+        this.time = time;
     }
 
     public String getCoordinates() {

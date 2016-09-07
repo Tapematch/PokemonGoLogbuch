@@ -26,21 +26,22 @@ public class LogbookEntryService implements ILogbookEntryService {
                 LogbookEntry entry = new LogbookEntry(entryId);
                 entry.setUserId(userId);
                 entry.setDate(rs.getDate(2));
-                entry.setStarttime(rs.getDate(3));
-                entry.setEndtime(rs.getDate(4));
+                entry.setStarttime(rs.getTime(3));
+                entry.setEndtime(rs.getTime(4));
                 entry.setStartlevel(rs.getInt(5));
                 entry.setLevelUp(rs.getBoolean(6));
                 entry.setStartEp(rs.getInt(7));
                 entry.setEndEp(rs.getInt(8));
 
                 List<WayPoint> waypoints = new ArrayList<>();
-                PreparedStatement selectWayPoints = conn.prepareStatement("SELECT Number, Coordinates, LocationName FROM waypoint WHERE EntryId=?");
+                PreparedStatement selectWayPoints = conn.prepareStatement("SELECT Number, Coordinates, LocationName, Time FROM waypoint WHERE EntryId=?");
                 selectWayPoints.setInt(1, entryId);
                 ResultSet rsWayPoints = selectWayPoints.executeQuery();
                 while (rsWayPoints.next()){
                     WayPoint waypoint = new WayPoint(rsWayPoints.getInt(1), entryId);
                     waypoint.setCoordinates(rsWayPoints.getString(2));
                     waypoint.setLocationName(rsWayPoints.getString(3));
+                    waypoint.setTime(rsWayPoints.getTime(4));
                     waypoints.add(waypoint);
                 }
                 entry.setWayPoints(waypoints);
@@ -53,7 +54,7 @@ public class LogbookEntryService implements ILogbookEntryService {
                 while (rsPokemon.next()){
                     Pokemon pokemon = new Pokemon(rsPokemon.getInt(1), entryId);
                     pokemon.setName(rsPokemon.getString(2));
-                    pokemon.setTime(rsPokemon.getDate(3));
+                    pokemon.setTime(rsPokemon.getTime(3));
                     pokemon.setCoordinates(rsPokemon.getString(4));
                     pokemon.setWp(rsPokemon.getInt(5));
                     pokemon.setLocationName(rsPokemon.getString(6));
@@ -68,7 +69,7 @@ public class LogbookEntryService implements ILogbookEntryService {
                 ResultSet rsGyms = selectGyms.executeQuery();
                 while (rsGyms.next()){
                     Gym gym = new Gym(rsGyms.getInt(1), entryId);
-                    gym.setTime(rsGyms.getDate(2));
+                    gym.setTime(rsGyms.getTime(2));
                     gym.setCoordinates(rsGyms.getString(3));
                     gym.setLocationName(rsGyms.getString(4));
                     gym.setLevel(rsGyms.getInt(5));

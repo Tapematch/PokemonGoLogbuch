@@ -1,14 +1,15 @@
 package model;
 
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 
 public class LogbookEntry {
     private int id;
     private int userId;
     private Date date;
-    private Date starttime;
-    private Date endtime;
+    private Time starttime;
+    private Time endtime;
     private int startlevel;
     private boolean levelUp;
     private int startEp;
@@ -45,19 +46,19 @@ public class LogbookEntry {
         this.date = date;
     }
 
-    public Date getStarttime() {
+    public Time getStarttime() {
         return starttime;
     }
 
-    public void setStarttime(Date starttime) {
+    public void setStarttime(Time starttime) {
         this.starttime = starttime;
     }
 
-    public Date getEndtime() {
+    public Time getEndtime() {
         return endtime;
     }
 
-    public void setEndtime(Date endtime) {
+    public void setEndtime(Time endtime) {
         this.endtime = endtime;
     }
 
