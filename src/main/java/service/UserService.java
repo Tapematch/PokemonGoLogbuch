@@ -9,9 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * Created by philt on 07.09.2016.
- */
 public class UserService implements IUserService {
     @Override
     public int getUserIdBySessionId(String sessionId) throws SQLException, ReflectiveOperationException {

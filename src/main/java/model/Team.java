@@ -1,8 +1,5 @@
 package model;
 
-/**
- * Created by philt on 07.09.2016.
- */
 public enum Team {
     INTUITION, WEISHEIT, WAGEMUT;
 

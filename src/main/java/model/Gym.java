@@ -2,9 +2,6 @@ package model;
 
 import java.sql.Time;
 
-/**
- * Created by philt on 07.09.2016.
- */
 public class Gym {
     private int number;
     private int userId;

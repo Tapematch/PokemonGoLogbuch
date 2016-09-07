@@ -5,9 +5,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import java.sql.Date;
 
-/**
- * Created by Niklas on 06.09.2016.
- */
 public class User {
     private int id;
     private String username;

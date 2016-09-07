@@ -4,9 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * Created by philt on 06.09.2016.
- */
 class DBHelper {
 
     static Connection getConnection() throws ReflectiveOperationException, SQLException {
