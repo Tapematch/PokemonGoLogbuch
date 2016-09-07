@@ -2,17 +2,11 @@
 
 function principalService($localStorage){
 
-    initialize();
-
     return{
         setIdentity: setIdentity,
         getIdentity: getIdentity,
         isAuthorized: isAuthorized
     };
-
-    function initialize(){
-        $localStorage.identity = null;
-    }
 
     function setIdentity(identitiy){
         $localStorage.identity = identitiy;

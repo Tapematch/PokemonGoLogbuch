@@ -3,7 +3,7 @@
         <label>{{ date | date:'dd.MM.yyyy'}}</label>
     </div>
     <div ng-show="isInEditMode">
-        <input type="date" ng-model="date"/>
+        <input type="text" ng-model="newDate"/>
     </div>
 </td>
 <td>
@@ -11,7 +11,7 @@
         <label>{{ startTime | date:'dd.MM.yyyy HH:mm:ss'}}</label>
     </div>
     <div ng-show="isInEditMode">
-        <input type="date" ng-model="startTime"/>
+        <input type="text" ng-model="newStartTime"/>
     </div>
 </td>
 <td>
@@ -19,7 +19,7 @@
         <label>{{ endTime | date:'dd.MM.yyyy HH:mm:ss'}}</label>
     </div>
     <div ng-show="isInEditMode">
-        <input type="date" ng-model="endTime"/>
+        <input type="text" ng-model="newEndTime"/>
     </div>
 </td>
 <td>
@@ -27,7 +27,7 @@
         <label>{{ startLevel }}</label>
     </div>
     <div ng-show="isInEditMode">
-        <input type="text" ng-model="startLevel" style="width: 80px"/>
+        <input type="text" ng-model="newStartLevel" style="width: 80px"/>
     </div>
 </td>
 <td>
@@ -35,7 +35,7 @@
         <label>{{ levelUp }}</label>
     </div>
     <div ng-show="isInEditMode">
-        <input type="checkbox"/>
+        <input type="checkbox" ng-model="newLevelUp"/>
     </div>
 </td>
 <td>
@@ -43,7 +43,7 @@
         <label>{{ startEp }}</label>
     </div>
     <div ng-show="isInEditMode">
-        <input type="text" ng-model="startEp" style="width: 80px"/>
+        <input type="text" ng-model="newStartEp" style="width: 80px"/>
     </div>
 </td>
 <td>
@@ -51,7 +51,7 @@
         <label>{{ endEp }}</label>
     </div>
     <div ng-show="isInEditMode">
-        <input type="text" ng-model="endEp" style="width: 80px"/>
+        <input type="text" ng-model="newEndEp" style="width: 80px"/>
     </div>
 </td>
 <td>
@@ -60,18 +60,18 @@
     </div>
     <div ng-show="!isInEditMode && showWaypointsList">
         <ul class="list-group" style="height: 200px; overflow-y: scroll; margin-bottom: 0">
-            <li class="list-group-item" ng-repeat="waypoint in waypointsList">
+            <li class="list-group-item" ng-repeat="waypoint in waypointsList | orderBy: 'number'">
                 {{ waypoint.locationName }}
             </li>
         </ul>
     </div>
     <div ng-show="isInEditMode">
-        <button class="btn btn-default" style="width: 100%"><span class="glyphicon glyphicon-plus"></span></button>
-        <ul class="list-group" style="height: 200px; overflow-y: scroll; margin-bottom: 0">
-            <li class="list-group-item" ng-repeat="waypoint in waypointsList">
+        <button class="btn btn-default" style="width: 100%" ng-click="lgbEntryCtrl.showNewWaypoint()"><span class="glyphicon glyphicon-plus"></span></button>
+        <div class="list-group" style="height: 200px; overflow-y: scroll; margin-bottom: 0">
+            <a href="" class="list-group-item" ng-click="lgbEntryCtrl.showWaypoint(waypoint)" ng-repeat="waypoint in newWaypointsList | orderBy: 'number'">
                 {{ waypoint.locationName }}
-            </li>
-        </ul>
+            </a>
+        </div>
     </div>
 </td>
 <td>
@@ -79,19 +79,19 @@
         <label>{{ arenasPreview }}</label>
     </div>
     <div ng-show="!isInEditMode && showArenasList">
-        <ul class="list-group" style="height: 200px; overflow-y: scroll; margin-bottom: 0">
-            <li class="list-group-item" ng-repeat="arena in arenasList">
+        <div class="list-group" style="height: 200px; overflow-y: scroll; margin-bottom: 0">
+            <a href="" class="list-group-item" ng-repeat="arena in arenasList" ng-click="lgbEntryCtrl.showArena(arena)">
                 {{ arena.locationName }}
-            </li>
-        </ul>
+            </a>
+        </div>
     </div>
     <div ng-show="isInEditMode">
-        <button class="btn btn-default" style="width: 100%"><span class="glyphicon glyphicon-plus"></span></button>
-        <ul class="list-group" style="height: 200px; overflow-y: scroll; margin-botom: 0">
-            <li class="list-group-item" ng-repeat="arena in arenasList">
+        <button class="btn btn-default" style="width: 100%" ng-click="lgbEntryCtrl.showNewArena()"><span class="glyphicon glyphicon-plus"></span></button>
+        <div class="list-group" style="height: 200px; overflow-y: scroll; margin-botom: 0">
+            <a href="" class="list-group-item" ng-repeat="arena in newArenasList" ng-click="lgbEntryCtrl.showArena(arena)">
                 {{ arena.locationName }}
-            </li>
-        </ul>
+            </a>
+        </div>
     </div>
 </td>
 <td>
@@ -99,23 +99,23 @@
         <label>{{ pokemonsPreview }}</label>
     </div>
     <div ng-show="!isInEditMode && showPokemonsList">
-        <ul class="list-group" style="height: 200px; overflow-y: scroll; margin-bottom: 0">
-            <li class="list-group-item" ng-repeat="pokemon in pokemonsList">
+        <div class="list-group" style="height: 200px; overflow-y: scroll; margin-bottom: 0">
+            <a class="list-group-item" ng-repeat="pokemon in pokemonsList" ng-click="lgbEntryCtrl.showPokemon(pokemon)">
                 {{ pokemon.name }}
-            </li>
-        </ul>
+            </a>
+        </div>
     </div>
     <div ng-show="isInEditMode">
-        <button class="btn btn-default" style="width: 100%"><span class="glyphicon glyphicon-plus"></span></button>
-        <ul class="list-group" style="height: 200px; overflow-y: scroll; margin-bottom: 0">
-            <li class="list-group-item" ng-repeat="pokemon in pokemonsList">
+        <button class="btn btn-default" style="width: 100%" ng-click="lgbEntryCtrl.showNewPokemon()"><span class="glyphicon glyphicon-plus"></span></button>
+        <div class="list-group" style="height: 200px; overflow-y: scroll; margin-bottom: 0">
+            <a href="" class="list-group-item" ng-repeat="pokemon in newPokemonsList" ng-click="lgbEntryCtrl.showPokemon(pokemon)">
                 {{ pokemon.name }}
-            </li>
-        </ul>
+            </a>
+        </div>
     </div>
 </td>
 <td>
-    <a href=""><span class="glyphicon glyphicon-pencil" ng-show="!isInEditMode"></span></a>
-    <a href=""><span class="glyphicon glyphicon-ok" ng-show="isInEditMode"></span></a>
-    <a href=""><span class="glyphicon glyphicon-remove" ng-show="isInEditMode"></span></a>
+    <a href=""><span class="glyphicon glyphicon-pencil" ng-show="!isInEditMode" ng-click="lgbEntryCtrl.edit()"></span></a>
+    <a href=""><span class="glyphicon glyphicon-ok" ng-show="isInEditMode" ng-click="lgbEntryCtrl.save()"></span></a>
+    <a href=""><span class="glyphicon glyphicon-remove" ng-show="isInEditMode" ng-click="lgbEntryCtrl.cancel()"></span></a>
 </td>

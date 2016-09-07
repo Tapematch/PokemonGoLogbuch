@@ -1,0 +1,74 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3>Arena</h3>
+    </div>
+    <div class="panel-body" style="padding: 0">
+        <table class="table table-striped">
+            <tr>
+                <th>
+                    Zeit
+                </th>
+                <th>
+                    Koordinaten
+                </th>
+                <th>
+                    Ortsname
+                </th>
+                <th>
+                    Level
+                </th>
+                <th>
+                    Team
+                </th>
+                <th>
+                    Sieg
+                </th>
+            </tr>
+            <tr ng-show="isInEditMode">
+                <td>
+                    <input type="text" ng-model="newTime"/>
+                </td>
+                <td>
+                    <input type="text" ng-model="newCoordinates"/>
+                </td>
+                <td>
+                    <input type="text" ng-model="newLocationName"/>
+                </td>
+                <td>
+                    <input type="text" ng-model="newLevel"/>
+                </td>
+                <td>
+                    <input type="text" ng-model="newTeam"/>
+                </td>
+                <td>
+                    <input type="checkbox" ng-model="newWin"/>
+                </td>
+            </tr>
+            <tr ng-show="!isInEditMode">
+                <td>
+                    <label>{{ data.time | date:'dd.MM.yyyy HH:mm:ss'}}</label>
+                </td>
+                <td>
+                    <label>{{ data.coordinates }}</label>
+                </td>
+                <td>
+                    <label>{{ data.locationName }}</label>
+                </td>
+                <td>
+                    <label>{{ data.level }}</label>
+                </td>
+                <td>
+                    <label>{{ data.team }}</label>
+                </td>
+                <td>
+                    <label>{{ data.win }}</label>
+                </td>
+            </tr>
+        </table>
+        <div class="col-lg-12">
+            <button class="btn btn-default" style="margin: 5px" ng-click="arnOvrvwCtrl.close()">Schließen</button>
+            <button class="btn btn-primary" style="margin: 5px" ng-show="isInEditMode" ng-click="arnOvrvwCtrl.save()">Speichern</button>
+            <button class="btn btn-danger" style="margin: 5px" ng-show="isInEditMode && !isnew" ng-click="arnOvrvwCtrl.delete()">Löschen</button>
+        </div>
+    </div>
+</div>

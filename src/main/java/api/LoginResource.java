@@ -10,6 +10,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import java.sql.SQLException;
 
 @Path("/login")
 public class LoginResource {
@@ -23,7 +24,7 @@ public class LoginResource {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response login(Credentials credentials){
+    public Response login(Credentials credentials) throws SQLException, ReflectiveOperationException {
         Identity identity = m_LoginService.loginUser(credentials.getUsername(), credentials.getPassword());
 
         return Response.status(200).entity(identity).build();

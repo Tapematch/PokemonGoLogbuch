@@ -56,7 +56,17 @@
                     <th></th>
                 </tr>
                 <tr logbook-entry="" ng-show="showNewEntry"></tr>
+                <tr ng-repeat="e in entries | orderBy: 'date':true" logbook-entry="e"></tr>
             </table>
+            <div ng-repeat="waypoint in activeWaypoint" style="top: 30%; left: 30%; position: fixed">
+                <waypoint-overview isnew="isNewWaypoint" data="waypoint"></waypoint-overview>
+            </div>
+            <div ng-repeat="pokemon in activePokemon" style="top: 30%; left: 30%; position: fixed">
+                <pokemon-overview isnew="isNewPokemon" data="pokemon"></pokemon-overview>
+            </div>
+            <div ng-repeat="arena in activeArena" style="top: 30%; left: 30%; position: fixed">
+                <arena-overview isnew="isNewArena" data="arena"></arena-overview>
+            </div>
         </div>
     </div>
 </div>
