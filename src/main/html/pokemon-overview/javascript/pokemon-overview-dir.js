@@ -34,7 +34,7 @@ function pokemonOverviewController($scope, dateService){
     }
 
     function save(){
-        $scope.data.time = dateService.getTimestamp($scope.newTime);
+        $scope.data.time = $scope.newTime;
         $scope.data.locationName = $scope.newLocationName;
         $scope.data.coordinates = $scope.newCoordinates;
         $scope.data.name = $scope.newName;

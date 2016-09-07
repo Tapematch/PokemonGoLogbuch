@@ -21,7 +21,7 @@ function waypointOverviewController($scope, dateService){
             $scope.newLocationName = data.locationName;
             $scope.newNumber = data.number;
             $scope.newCoordinates = data.coordinates;
-            $scope.time = dateService.getDate(data.time, true);
+            $scope.newTime = dateService.getDate(data.time, true);
         }
     }
 
@@ -33,7 +33,7 @@ function waypointOverviewController($scope, dateService){
         $scope.data.number = $scope.newNumber;
         $scope.data.locationName = $scope.newLocationName;
         $scope.data.coordinates = $scope.newCoordinates;
-        $scope.data.time = dateService.getTimestamp($scope.newTime);
+        $scope.data.time = $scope.newTime;
 
         $scope.mainController.hideWaypoint(false);
     }

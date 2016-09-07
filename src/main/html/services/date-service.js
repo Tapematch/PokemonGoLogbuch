@@ -1,28 +1,47 @@
 function dateService(){
     return{
         getTimestamp: getTimestamp,
-        getDate: getDate
+        getDate: getDate,
+        buildDate: buildDate
     };
 
-    function getDate(timestamp, fullTime){
+    function buildDate(baseDate, time){
+        return baseDate + ' ' + time + ':00';
+    }
+
+    function getDate(timestamp, timeOnly){
         var date = new Date(timestamp);
-        var dateString = '';
 
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-
-        dateString += day + '.' + month + '.' + year;
-
-        if (fullTime){
-            var hour = date.getHours();
-            var minute = date.getMinutes();
-            var second = date.getSeconds();
-
-            dateString += ' ' + hour + ':' + minute + ':' + second;
+        if (!date || isNaN(date)){
+            return timestamp;
         }
 
-        return dateString;
+        if (timeOnly){
+            var hour = date.getHours();
+            if (hour.toString().length === 1){
+                hour = "0" + hour;
+            }
+
+            var minute = date.getMinutes();
+            if (minute.toString().length === 1){
+                minute = "0" + minute;
+            }
+
+            return hour + ':' + minute;
+        } else {
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            if (month.toString().length === 1){
+                month = "0" + month;
+            }
+
+            var day = date.getDate();
+            if (day.toString().length === 1){
+                day = "0" + day;
+            }
+
+            return day + '.' + month + '.' + year;
+        }
     }
 
     function getTimestamp(date){

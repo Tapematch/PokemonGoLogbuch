@@ -31,27 +31,10 @@ function mainController($scope, $state, httpRequestService, principalService, wa
         $scope.isNewWaypoint = false;
 
         loadEntries();
-        //test();
-    }
-
-    function test(){
-        var entry = {
-            date: 1349820000000,
-            startTime: 1349820000000,
-            endTime: 1349820000000,
-            startLevel: 25,
-            levelUp: true,
-            startEp: 50,
-            endEp: 100,
-            waypoints: [],
-            arenas: [],
-            pokemons: []
-        };
-
-        $scope.entries.push(entry);
     }
 
     function loadEntries(){
+        $scope.showNewEntry = false;
         $scope.entries = [];
 
         var userId = principalService.getIdentity().id;
@@ -184,6 +167,7 @@ function mainController($scope, $state, httpRequestService, principalService, wa
     }
 
     function logout(){
+        httpRequestService.logout(principalService.getIdentity().id);
         principalService.setIdentity(null);
         $state.go('login');
     }

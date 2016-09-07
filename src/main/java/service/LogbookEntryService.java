@@ -182,12 +182,11 @@ public class LogbookEntryService implements ILogbookEntryService {
         Connection conn = DBHelper.getConnection();
 
         try {
+            conn = deleteLinkedItems(conn, entryId);
             PreparedStatement delete = conn.prepareStatement("DELETE FROM logbookentry WHERE Id=?");
             delete.setInt(1, entryId);
             delete.executeUpdate();
             statements.add(delete);
-
-            conn = deleteLinkedItems(conn, entryId);
 
             conn.commit();
         } catch (SQLException e) {

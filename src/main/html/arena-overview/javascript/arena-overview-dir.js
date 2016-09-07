@@ -36,7 +36,7 @@ function arenaOverviewController($scope, dateService){
     }
 
     function save(){
-        $scope.data.time = dateService.getTimestamp($scope.newTime);
+        $scope.data.time = $scope.newTime;
         $scope.data.locationName = $scope.newLocationName;
         $scope.data.coordinates = $scope.newCoordinates;
         $scope.data.level = $scope.newLevel;

@@ -51,9 +51,10 @@ public class LogbookEntryResource {
     }
 
     @DELETE
+    @Path("/delete/{id}")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response deleteLogbookEntry(int entryId){
+    public Response deleteLogbookEntry(@PathParam("id")int entryId){
         try{
             m_LogbookEntryService.deleteLogbookEntry(entryId);
 

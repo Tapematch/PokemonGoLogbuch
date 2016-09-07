@@ -1,6 +1,6 @@
 'use strict';
 
-function logbookEntryController($scope, dateService, principalService, httpRequestService){
+function logbookEntryController($scope, dateService, principalService, httpRequestService, listService){
     var that = this;
     that.showWayPoints = showWayPoints;
     that.showArenas = showArenas;
@@ -14,6 +14,7 @@ function logbookEntryController($scope, dateService, principalService, httpReque
     that.save = save;
     that.cancel = cancel;
     that.edit = edit;
+    that.delete = deleteEntry;
 
     initialize();
 
@@ -69,24 +70,34 @@ function logbookEntryController($scope, dateService, principalService, httpReque
             id: $scope.id,
             userId: principalService.getIdentity().id,
             date: dateService.getTimestamp($scope.newDate),
-            starttime: dateService.getTimestamp($scope.newStartTime),
-            endtime: dateService.getTimestamp($scope.newEndTime),
+            starttime: dateService.getTimestamp(dateService.buildDate($scope.newDate, $scope.newStartTime)),
+            endtime: dateService.getTimestamp(dateService.buildDate($scope.newDate, $scope.newEndTime)),
             startlevel: $scope.newStartLevel,
             levelUp: $scope.newLevelUp,
             startEp: $scope.newStartEp,
             endEp: $scope.newEndEp,
-            waypoints: $scope.newWaypointsList,
-            gyms: $scope.newArenasList,
-            pokemon: $scope.newPokemonsList
+            waypoints: listService.resetDates($scope.newWaypointsList, $scope.newDate),
+            gyms: listService.resetDates($scope.newArenasList, $scope.newDate),
+            pokemon: listService.resetDates($scope.newPokemonsList, $scope.newDate)
         };
 
-        httpRequestService.addLogbookEntry(entry)
-            .then(function(){
-                $scope.mainController.showInfo('Eintrag erfolgreich gespeichert.');
-                $scope.mainController.loadEntries();
-            }, function(error){
-                $scope.mainController.showError('Eintrag konnte nicht gespeichert werden: ' + error);
-            });
+        if ($scope.item){
+            httpRequestService.updateLogbookEntry(entry)
+                .then(function () {
+                    $scope.mainController.showInfo('Eintrag erfolgreich gespeichert.');
+                    $scope.mainController.loadEntries();
+                }, function (error) {
+                    $scope.mainController.showError('Eintrag konnte nicht gespeichert werden: ' + error);
+                });
+        } else {
+            httpRequestService.addLogbookEntry(entry)
+                .then(function () {
+                    $scope.mainController.showInfo('Eintrag erfolgreich gespeichert.');
+                    $scope.mainController.loadEntries();
+                }, function (error) {
+                    $scope.mainController.showError('Eintrag konnte nicht gespeichert werden: ' + error);
+                });
+        }
     }
 
     function edit(){
@@ -101,6 +112,16 @@ function logbookEntryController($scope, dateService, principalService, httpReque
             resetnew();
             $scope.mainController.hideNewEntry();
         }
+    }
+
+    function deleteEntry() {
+        httpRequestService.deleteLogbookEntry($scope.id)
+            .then(function () {
+                $scope.mainController.showInfo('Eintrag erfolgreich gelöscht.');
+                $scope.mainController.loadEntries();
+            }, function (error) {
+                $scope.mainController.showError('Eintrag konnte nicht gelöscht werden: ' + error);
+            });
     }
 
     function resetnew() {
@@ -250,7 +271,7 @@ function logbookEntryDirective(){
             pokemonsList: '=?',
             isInEditMode: '=?'
         },
-        controller: ['$scope', 'dateService', 'principalService', 'httpRequestService', logbookEntryController],
+        controller: ['$scope', 'dateService', 'principalService', 'httpRequestService', 'listService', logbookEntryController],
         controllerAs: 'lgbEntryCtrl',
         templateUrl: 'logbook-entry/template/logbook-entry-template.html',
         link:{
