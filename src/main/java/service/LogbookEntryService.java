@@ -96,23 +96,27 @@ public class LogbookEntryService implements ILogbookEntryService {
         Connection conn = DBHelper.getConnection();
         if(conn!=null) {
 
-            PreparedStatement insert = conn.prepareStatement("INSERT INTO logbookentry (Id, UserId, Date, Starttime, Endtime, Startlevel, LevelUp, StartEp, EndEp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            insert.setInt(1, entry.getId());
-            insert.setInt(2, entry.getUserId());
-            insert.setDate(3, entry.getDate());
-            insert.setTime(4, entry.getStarttime());
-            insert.setTime(5, entry.getEndtime());
-            insert.setInt(6, entry.getStartlevel());
-            insert.setBoolean(7, entry.isLevelUp());
-            insert.setInt(8, entry.getStartEp());
-            insert.setInt(9, entry.getEndEp());
+            PreparedStatement insert = conn.prepareStatement("INSERT INTO logbookentry (UserId, Date, Starttime, Endtime, Startlevel, LevelUp, StartEp, EndEp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            insert.setInt(1, entry.getUserId());
+            insert.setDate(2, entry.getDate());
+            insert.setTime(3, entry.getStarttime());
+            insert.setTime(4, entry.getEndtime());
+            insert.setInt(5, entry.getStartlevel());
+            insert.setBoolean(6, entry.isLevelUp());
+            insert.setInt(7, entry.getStartEp());
+            insert.setInt(8, entry.getEndEp());
             insert.executeUpdate();
             insert.close();
+
+
+            ResultSet tableKeys = insert.getGeneratedKeys();
+            tableKeys.next();
+            int entryId = tableKeys.getInt(1);
 
             for (WayPoint wayPoint : entry.getWayPoints()) {
                 PreparedStatement insertWayPoint = conn.prepareStatement("INSERT INTO waypoint (Number, EntryId, Time, Coordinates, LocationName) VALUES (?, ?, ?, ?, ?)");
                 insertWayPoint.setInt(1, wayPoint.getNumber());
-                insertWayPoint.setInt(2, entry.getId());
+                insertWayPoint.setInt(2, entryId);
                 insertWayPoint.setTime(3, wayPoint.getTime());
                 insertWayPoint.setString(4, wayPoint.getCoordinates());
                 insertWayPoint.setString(5, wayPoint.getLocationName());
@@ -123,7 +127,7 @@ public class LogbookEntryService implements ILogbookEntryService {
             for (Pokemon pokemon : entry.getPokemon()) {
                 PreparedStatement insertPokemon = conn.prepareStatement("INSERT INTO pokemon (Number, EntryId, Name, Time, Coordinates, Wp, LocationName) VALUES (?, ?, ?, ?, ?, ?, ?)");
                 insertPokemon.setInt(1, pokemon.getNumber());
-                insertPokemon.setInt(2, entry.getId());
+                insertPokemon.setInt(2, entryId);
                 insertPokemon.setString(3, pokemon.getName());
                 insertPokemon.setTime(4, pokemon.getTime());
                 insertPokemon.setString(5, pokemon.getCoordinates());
@@ -136,7 +140,7 @@ public class LogbookEntryService implements ILogbookEntryService {
             for (Gym gym : entry.getGyms()) {
                 PreparedStatement insertGym = conn.prepareStatement("INSERT INTO gym (Number, EntryId,  Time, Coordinates, LocationName, Level, Team, Win) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
                 insertGym.setInt(1, gym.getNumber());
-                insertGym.setInt(2, entry.getId());
+                insertGym.setInt(2, entryId);
                 insertGym.setTime(3, gym.getTime());
                 insertGym.setString(4, gym.getCoordinates());
                 insertGym.setString(5, gym.getLocationName());
