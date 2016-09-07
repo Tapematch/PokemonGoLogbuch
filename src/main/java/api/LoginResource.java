@@ -1,7 +1,7 @@
 package api;
 
 import dto.Credentials;
-import dto.Identity;
+import model.User;
 import service.LoginService;
 import service.interfaces.ILoginService;
 
@@ -10,7 +10,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import java.sql.SQLException;
 
 @Path("/login")
 public class LoginResource {
@@ -24,9 +23,14 @@ public class LoginResource {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response login(Credentials credentials) throws SQLException, ReflectiveOperationException {
-        Identity identity = m_LoginService.loginUser(credentials.getUsername(), credentials.getPassword());
+    public Response login(Credentials credentials){
+        try{
+            User user = m_LoginService.loginUser(credentials.getUsername(), credentials.getPassword());
 
-        return Response.status(200).entity(identity).build();
+            return Response.status(200).entity(user).build();
+        }
+        catch (Exception exception){
+            return Response.status(500).entity(exception.getMessage()).build();
+        }
     }
 }
