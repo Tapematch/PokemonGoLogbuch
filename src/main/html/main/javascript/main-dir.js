@@ -20,6 +20,8 @@ function mainController($scope, httpRequestService, principalService, waypointSe
 
     function initialize(){
         $scope.username = principalService.getIdentity().username;
+        $scope.team = principalService.getIdentity().team;
+        $scope.startdate = principalService.getIdentity().startdate;
         $scope.activeWaypoint = [];
         $scope.isNewWaypoint = false;
 

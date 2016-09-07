@@ -7,6 +7,7 @@ import service.interfaces.ILogbookEntryService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.sql.SQLException;
 import java.util.List;
 
 @Path("/logbookentry")
@@ -50,7 +51,7 @@ public class LogbookEntryResource {
     @GET
     @Path("user/{id}")
     @Produces("application/json")
-    public Response getLogbookEntriesByUserId(@PathParam("id") int id){
+    public Response getLogbookEntriesByUserId(@PathParam("id") int id) throws SQLException, ReflectiveOperationException {
         List<LogbookEntry> entries = m_LogbookEntryService.getLogbookEntriesByUserId(id);
 
         return Response.status(200).entity(entries).build();
