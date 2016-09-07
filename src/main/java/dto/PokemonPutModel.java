@@ -1,22 +1,20 @@
-package model;
+package dto;
 
-import javax.json.Json;
-import javax.json.JsonObject;
+import model.Pokemon;
+
 import java.sql.Time;
 
-public class Pokemon {
+/**
+ * Created by Niklas on 07.09.2016.
+ */
+public class PokemonPutModel {
     private int number;
     private int userId;
     private String name;
-    private Time time;
+    private long time;
     private String coordinates;
     private String locationName;
     private int wp;
-
-    public Pokemon(int number, int userId) {
-        this.number = number;
-        this.userId = userId;
-    }
 
     public int getNumber() {
         return number;
@@ -42,11 +40,11 @@ public class Pokemon {
         this.name = name;
     }
 
-    public Time getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -74,15 +72,14 @@ public class Pokemon {
         this.wp = wp;
     }
 
-    public JsonObject toJson(){
-        return Json.createObjectBuilder()
-                .add("number", number)
-                .add("userId", userId)
-                .add("name", name)
-                .add("time", time.getTime())
-                .add("coordinates", coordinates)
-                .add("locationName", locationName)
-                .add("wp", wp)
-                .build();
+    public Pokemon toPokemon(){
+        Pokemon pokemon = new Pokemon(number, userId);
+        pokemon.setTime(new Time(time));
+        pokemon.setLocationName(locationName);
+        pokemon.setName(name);
+        pokemon.setCoordinates(coordinates);
+        pokemon.setWp(wp);
+
+        return pokemon;
     }
 }

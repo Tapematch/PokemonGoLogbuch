@@ -3,8 +3,29 @@
 function httpRequestService($http, $q, principalService){
     return{
         login: login,
-        getLogbookEntriesByUserId: getLogbookEntriesByUserId
+        getLogbookEntriesByUserId: getLogbookEntriesByUserId,
+        addLogbookEntry: addLogbookEntry
     };
+
+    function addLogbookEntry(entry){
+        var deferred = $q.defer();
+
+        var identity = principalService.getIdentity();
+
+        var config = {
+            url: 'http://localhost:8080/rest/logbookentry/add',
+            method: 'PUT',
+            headers: {
+                'Authorization': 'Bearer ' + identity.sessionId,
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            data: entry
+        };
+
+        request(config, deferred);
+
+        return deferred.promise;
+    }
 
     function getLogbookEntriesByUserId(id){
         var deferred = $q.defer();
@@ -12,7 +33,7 @@ function httpRequestService($http, $q, principalService){
         var identity = principalService.getIdentity();
 
         var config = {
-            url: 'http://localhost/rest/logbookentry/user/' + id,
+            url: 'http://localhost:8080/rest/logbookentry/user/' + id,
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + identity.sessionId,

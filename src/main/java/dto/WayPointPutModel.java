@@ -1,20 +1,18 @@
-package model;
+package dto;
 
-import javax.json.Json;
-import javax.json.JsonObject;
+import model.WayPoint;
+
 import java.sql.Time;
 
-public class WayPoint {
+/**
+ * Created by Niklas on 07.09.2016.
+ */
+public class WayPointPutModel {
     private int number;
     private int userId;
-    private Time time;
+    private long time;
     private String coordinates;
     private String locationName;
-
-    public WayPoint(int number, int userId) {
-        this.number = number;
-        this.userId = userId;
-    }
 
     public int getNumber() {
         return number;
@@ -32,11 +30,11 @@ public class WayPoint {
         this.userId = userId;
     }
 
-    public Time getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -56,13 +54,12 @@ public class WayPoint {
         this.locationName = locationName;
     }
 
-    public JsonObject toJson(){
-        return Json.createObjectBuilder()
-                .add("number", number)
-                .add("userId", userId)
-                .add("time", time.getTime())
-                .add("coordinates", coordinates)
-                .add("locationName", locationName)
-                .build();
+    public WayPoint toWayPoint(){
+        WayPoint wayPoint = new WayPoint(number, userId);
+        wayPoint.setCoordinates(coordinates);
+        wayPoint.setLocationName(locationName);
+        wayPoint.setTime(new Time(time));
+
+        return wayPoint;
     }
 }

@@ -17,6 +17,7 @@ function arenaOverviewController($scope, dateService){
             $scope.newTeam = '';
             $scope.newWin = false;
             $scope.newLevel = '';
+            $scope.newNumber = 1;
         } else{
             var data = $scope.data;
             $scope.isInEditMode = data.isInEditMode;
@@ -26,6 +27,7 @@ function arenaOverviewController($scope, dateService){
             $scope.newTeam = data.team;
             $scope.newLevel = data.level;
             $scope.newWin = data.win;
+            $scope.newNumber = data.number;
         }
     }
 
@@ -40,6 +42,7 @@ function arenaOverviewController($scope, dateService){
         $scope.data.level = $scope.newLevel;
         $scope.data.team = $scope.newTeam;
         $scope.data.win = $scope.newWin;
+        $scope.data.number = $scope.newNumber;
 
         $scope.mainController.hideArena(false);
     }

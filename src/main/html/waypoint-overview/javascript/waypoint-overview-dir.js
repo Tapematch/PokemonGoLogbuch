@@ -1,6 +1,6 @@
 'use strict';
 
-function waypointOverviewController($scope){
+function waypointOverviewController($scope, dateService){
     var that = this;
     that.close = close;
     that.save = save;
@@ -14,12 +14,14 @@ function waypointOverviewController($scope){
             $scope.newLocationName = '';
             $scope.newNumber = 1;
             $scope.newCoordinates = '';
+            $scope.newTime = '';
         } else{
             var data = $scope.data;
             $scope.isInEditMode = data.isInEditMode;
             $scope.newLocationName = data.locationName;
             $scope.newNumber = data.number;
             $scope.newCoordinates = data.coordinates;
+            $scope.time = dateService.getDate(data.time, true);
         }
     }
 
@@ -31,6 +33,7 @@ function waypointOverviewController($scope){
         $scope.data.number = $scope.newNumber;
         $scope.data.locationName = $scope.newLocationName;
         $scope.data.coordinates = $scope.newCoordinates;
+        $scope.data.time = dateService.getTimestamp($scope.newTime);
 
         $scope.mainController.hideWaypoint(false);
     }
@@ -52,7 +55,7 @@ function waypointOverviewDirective(){
             newNumber: '=?',
             newCoordinates: '=?'
         },
-        controller: ['$scope', waypointOverviewController],
+        controller: ['$scope', 'dateService', waypointOverviewController],
         controllerAs: 'wpntOvrvwCtrl',
         templateUrl: 'waypoint-overview/template/waypoint-overview-template.html',
         link:{

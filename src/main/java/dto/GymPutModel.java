@@ -1,23 +1,19 @@
-package model;
+package dto;
 
-import javax.json.Json;
-import javax.json.JsonObject;
+import model.Gym;
+import model.Team;
+
 import java.sql.Time;
 
-public class Gym {
+public class GymPutModel {
     private int number;
     private int userId;
-    private Time time;
+    private long time;
     private String coordinates;
     private String locationName;
     private int level;
-    private Team team;
+    private String team;
     private boolean win;
-
-    public Gym(int number, int userId) {
-        this.number = number;
-        this.userId = userId;
-    }
 
     public int getNumber() {
         return number;
@@ -35,11 +31,11 @@ public class Gym {
         this.userId = userId;
     }
 
-    public Time getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -67,11 +63,11 @@ public class Gym {
         this.level = level;
     }
 
-    public Team getTeam() {
+    public String getTeam() {
         return team;
     }
 
-    public void setTeam(Team team) {
+    public void setTeam(String team) {
         this.team = team;
     }
 
@@ -83,16 +79,15 @@ public class Gym {
         this.win = win;
     }
 
-    public JsonObject toJson(){
-        return Json.createObjectBuilder()
-                .add("number", number)
-                .add("userId", userId)
-                .add("time", time.getTime())
-                .add("coordinates", coordinates)
-                .add("locationName", locationName)
-                .add("level", level)
-                .add("team", team.toString())
-                .add("win", win)
-                .build();
+    public Gym toGym(){
+        Gym gym = new Gym(number, userId);
+        gym.setCoordinates(coordinates);
+        gym.setLevel(level);
+        gym.setLocationName(locationName);
+        gym.setTeam(Team.getTeam(team));
+        gym.setTime(new Time(time));
+        gym.setWin(win);
+
+        return gym;
     }
 }

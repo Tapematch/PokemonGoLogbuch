@@ -1,5 +1,9 @@
 package model;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
@@ -116,5 +120,42 @@ public class LogbookEntry {
 
     public void setGyms(List<Gym> gyms) {
         this.gyms = gyms;
+    }
+
+    public JsonObject toJson(){
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+
+        builder.add("id", id)
+                .add("userId", userId)
+                .add("date", date.getTime())
+                .add("startTime", starttime.getTime())
+                .add("endTime", endtime.getTime())
+                .add("startLevel", startlevel)
+                .add("levelUp", levelUp)
+                .add("startEp", startEp)
+                .add("endEp", endEp);
+
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        for (WayPoint wayPoint : wayPoints){
+            arrayBuilder.add(wayPoint.toJson());
+        }
+
+        builder.add("waypoints", arrayBuilder.build());
+
+        arrayBuilder = Json.createArrayBuilder();
+        for (Gym gym : gyms){
+            arrayBuilder.add(gym.toJson());
+        }
+
+        builder.add("arenas", arrayBuilder.build());
+
+        arrayBuilder = Json.createArrayBuilder();
+        for (Pokemon poke : pokemon){
+            arrayBuilder.add(poke.toJson());
+        }
+
+        builder.add("pokemons", arrayBuilder.build());
+
+        return builder.build();
     }
 }

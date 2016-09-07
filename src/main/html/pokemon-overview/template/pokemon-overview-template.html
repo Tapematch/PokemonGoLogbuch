@@ -6,6 +6,9 @@
         <table class="table table-striped">
             <tr>
                 <th>
+                    Nummer
+                </th>
+                <th>
                     Name
                 </th>
                 <th>
@@ -23,6 +26,9 @@
             </tr>
             <tr ng-show="isInEditMode">
                 <td>
+                    <input type="text" ng-model="newNumber"/>
+                </td>
+                <td>
                     <input type="text" ng-model="newName"/>
                 </td>
                 <td>
@@ -35,10 +41,13 @@
                     <input type="text" ng-model="newLocationName"/>
                 </td>
                 <td>
-                    <input type="checkbox" ng-model="newWp"/>
+                    <input type="text" ng-model="newWp"/>
                 </td>
             </tr>
             <tr ng-show="!isInEditMode">
+                <td>
+                    <label>{{ data.number }}</label>
+                </td>
                 <td>
                     <label>{{ data.name }}</label>
                 </td>

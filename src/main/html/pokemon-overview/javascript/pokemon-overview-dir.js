@@ -16,6 +16,7 @@ function pokemonOverviewController($scope, dateService){
             $scope.newCoordinates = '';
             $scope.newName = '';
             $scope.newWp = '';
+            $scope.newNumber = 1;
         } else{
             var data = $scope.data;
             $scope.isInEditMode = data.isInEditMode;
@@ -24,6 +25,7 @@ function pokemonOverviewController($scope, dateService){
             $scope.newCoordinates = data.coordinates;
             $scope.newName = data.name;
             $scope.newWp = data.wp;
+            $scope.newNumber = data.number;
         }
     }
 
@@ -37,6 +39,7 @@ function pokemonOverviewController($scope, dateService){
         $scope.data.coordinates = $scope.newCoordinates;
         $scope.data.name = $scope.newName;
         $scope.data.wp = $scope.newWp;
+        $scope.data.number = $scope.newNumber;
 
         $scope.mainController.hidePokemon(false);
     }
