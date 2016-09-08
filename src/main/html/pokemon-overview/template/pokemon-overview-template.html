@@ -1,5 +1,5 @@
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading" style="background-color: #ffffff">
         <h3>Pokemon</h3>
     </div>
     <div class="panel-body" style="padding: 0">
@@ -18,7 +18,7 @@
                     Koordinaten
                 </th>
                 <th>
-                    Ortsname
+                    Ort
                 </th>
                 <th>
                     WP
@@ -26,13 +26,13 @@
             </tr>
             <tr ng-show="isInEditMode">
                 <td>
-                    <input type="text" ng-model="newNumber"/>
+                    <input type="text" ng-model="newNumber" style="width: 50px"/>
                 </td>
                 <td>
                     <input type="text" ng-model="newName"/>
                 </td>
                 <td>
-                    <input type="text" ng-model="newTime"/>
+                    <input type="text" ng-model="newTime" style="width: 60px"/>
                 </td>
                 <td>
                     <input type="text" ng-model="newCoordinates"/>
@@ -41,7 +41,7 @@
                     <input type="text" ng-model="newLocationName"/>
                 </td>
                 <td>
-                    <input type="text" ng-model="newWp"/>
+                    <input type="text" ng-model="newWp" style="width: 50px"/>
                 </td>
             </tr>
             <tr ng-show="!isInEditMode">
@@ -52,7 +52,7 @@
                     <label>{{ data.name }}</label>
                 </td>
                 <td>
-                    <label>{{ data.time }}</label>
+                    <label>{{ newTime | date: 'HH:mm'}}</label>
                 </td>
                 <td>
                     <label>{{ data.coordinates }}</label>

@@ -91,10 +91,13 @@ function httpRequestService($http, $q, principalService){
     function logout(id){
         var deferred = $q.defer();
 
+        var identity = principalService.getIdentity();
+
         var config = {
             url: 'http://localhost:8080/rest/logout/' + id,
             method: 'POST',
             headers: {
+                'Authorization': 'Bearer ' + identity.sessionId,
                 'Content-Type': 'application/json; charset=utf-8'
             }
         };
@@ -125,7 +128,11 @@ function httpRequestService($http, $q, principalService){
         $http(config).then(function(response){
             deferred.resolve(response.data);
         }, function(response){
-            deferred.reject(response.data);
+            if (response.status === 401){
+                deferred.reject("Ungültige SessionId!");
+            } else{
+                deferred.reject(response.data);
+            }
         });
     }
 }

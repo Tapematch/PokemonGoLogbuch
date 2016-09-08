@@ -2,7 +2,15 @@
     <div class="panel">
         <div class="panel-body">
             <div style="float: left">
-                {{ username }} | {{ team }} | {{ startdate | date: 'dd.MM.yyyy' }}
+                <div style="margin: 10px; float: left">
+                    <label>Nutzer: </label> {{ username }}
+                </div>
+                <div style="margin: 10px; float: left">
+                    <label>Team: </label> {{ team[0] + team.substring(1, team.length).toLowerCase() }}
+                </div>
+                <div style="margin: 10px; float: left">
+                    <label>Angefangen zu spielen: </label> {{ startdate | date: 'dd.MM.yyyy' }}
+                </div>
             </div>
             <div style="float: right">
                 <button class="btn btn-default" ng-click="mainCtrl.logout()">Abmelden</button>
@@ -61,7 +69,7 @@
                     <th>
                         Pokemon
                     </th>
-                    <th></th>
+                    <th width="70px"></th>
                 </tr>
                 <tr logbook-entry="" ng-show="showNewEntry"></tr>
                 <tr ng-repeat="e in entries | orderBy: 'date':true" logbook-entry="e"></tr>

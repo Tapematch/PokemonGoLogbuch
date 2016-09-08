@@ -1,5 +1,6 @@
 package api;
 
+import api.annotations.Secured;
 import dto.LogbookEntryPutModel;
 import model.LogbookEntry;
 import service.LogbookEntryService;
@@ -22,6 +23,7 @@ public class LogbookEntryResource {
     }
 
     @PUT
+    @Secured
     @Path("/add")
     @Consumes("application/json")
     @Produces("application/json")
@@ -37,6 +39,7 @@ public class LogbookEntryResource {
     }
 
     @PUT
+    @Secured
     @Path("/update")
     @Consumes("application/json")
     @Produces("application/json")
@@ -51,6 +54,7 @@ public class LogbookEntryResource {
     }
 
     @DELETE
+    @Secured
     @Path("/delete/{id}")
     @Consumes("application/json")
     @Produces("application/json")
@@ -65,6 +69,7 @@ public class LogbookEntryResource {
     }
 
     @GET
+    @Secured
     @Path("user/{id}")
     @Produces("application/json")
     public Response getLogbookEntriesByUserId(@PathParam("id") int id) {

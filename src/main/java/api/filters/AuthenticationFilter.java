@@ -1,6 +1,8 @@
 package api.filters;
 
 import api.annotations.Secured;
+import service.LoginService;
+import service.interfaces.ILoginService;
 
 import javax.annotation.Priority;
 import javax.ws.rs.NotAuthorizedException;
@@ -17,13 +19,11 @@ import java.io.IOException;
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter{
 
-    /*private ILoginService m_LoginService;
-    private IUserService m_UserService;
+    private ILoginService m_LoginService;
 
     public AuthenticationFilter(){
         m_LoginService = new LoginService();
-        m_UserService = new UserService();
-    }*/
+    }
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext) throws IOException {
@@ -45,8 +45,8 @@ public class AuthenticationFilter implements ContainerRequestFilter{
     }
 
     private void validateToken(String sessionId) throws Exception{
-        /*if (!m_LoginService.sessionIdIsValid(sessionId)){
+        if (!m_LoginService.sessionIdIsValid(sessionId)){
             throw new Exception("Invalid session id!");
-        }*/
+        }
     }
 }

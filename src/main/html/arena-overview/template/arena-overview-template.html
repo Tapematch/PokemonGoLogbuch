@@ -1,5 +1,5 @@
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading" style="background-color: #ffffff">
         <h3>Arena</h3>
     </div>
     <div class="panel-body" style="padding: 0">
@@ -15,7 +15,7 @@
                     Koordinaten
                 </th>
                 <th>
-                    Ortsname
+                    Ort
                 </th>
                 <th>
                     Level
@@ -29,10 +29,10 @@
             </tr>
             <tr ng-show="isInEditMode">
                 <td>
-                    <input type="text" ng-model="newNumber"/>
+                    <input type="text" ng-model="newNumber" style="width: 50px"/>
                 </td>
                 <td>
-                    <input type="text" ng-model="newTime"/>
+                    <input type="text" ng-model="newTime" style="width: 60px"/>
                 </td>
                 <td>
                     <input type="text" ng-model="newCoordinates"/>
@@ -41,10 +41,11 @@
                     <input type="text" ng-model="newLocationName"/>
                 </td>
                 <td>
-                    <input type="text" ng-model="newLevel"/>
+                    <input type="text" ng-model="newLevel" style="width: 60px"/>
                 </td>
                 <td>
-                    <input type="text" ng-model="newTeam"/>
+                    <select ng-options="t for t in teams"
+                            ng-model="newTeam"></select>
                 </td>
                 <td>
                     <input type="checkbox" ng-model="newWin"/>
@@ -52,10 +53,10 @@
             </tr>
             <tr ng-show="!isInEditMode">
                 <td>
-                    {{ data.number }}
+                    <label>{{ data.number }}</label>
                 </td>
                 <td>
-                    <label>{{ data.time | date:'dd.MM.yyyy HH:mm:ss'}}</label>
+                    <label>{{ newTime | date:'HH:mm'}}</label>
                 </td>
                 <td>
                     <label>{{ data.coordinates }}</label>
@@ -64,13 +65,13 @@
                     <label>{{ data.locationName }}</label>
                 </td>
                 <td>
-                    <label>{{ data.level }}</label>
+                    <label style="width: 50px">{{ data.level }}</label>
                 </td>
                 <td>
-                    <label>{{ data.team }}</label>
+                    <label>{{ data.team[0] + data.team.substring(1, team.length).toLowerCase() }}</label>
                 </td>
                 <td>
-                    <label>{{ data.win }}</label>
+                    <label>{{ data.win ? 'Ja' : 'Nein' }}</label>
                 </td>
             </tr>
         </table>

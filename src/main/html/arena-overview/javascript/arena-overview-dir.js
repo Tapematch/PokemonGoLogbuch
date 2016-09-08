@@ -9,6 +9,8 @@ function arenaOverviewController($scope, dateService){
     initialize();
 
     function initialize(){
+        $scope.teams = ["Weisheit", "Intuition", "Wagemut"];
+
         if ($scope.isnew){
             $scope.isInEditMode = true;
             $scope.newLocationName = '';
@@ -24,7 +26,7 @@ function arenaOverviewController($scope, dateService){
             $scope.newLocationName = data.locationName;
             $scope.newTime = dateService.getDate(data.time, true);
             $scope.newCoordinates = data.coordinates;
-            $scope.newTeam = data.team;
+            $scope.newTeam = data.team[0] + data.team.substring(1, data.team.length).toLowerCase();
             $scope.newLevel = data.level;
             $scope.newWin = data.win;
             $scope.newNumber = data.number;

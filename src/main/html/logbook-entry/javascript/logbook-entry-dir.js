@@ -11,6 +11,12 @@ function logbookEntryController($scope, dateService, principalService, httpReque
     that.showArena = showArena;
     that.showNewPokemon = showNewPokemon;
     that.showPokemon = showPokemon;
+    that.showWaypointsList = showWaypointsList;
+    that.showPokemonsList = showPokemonsList;
+    that.showArenasList = showArenasList;
+    that.hideWaypointsList = hideWaypointsList;
+    that.hidePokemonsList = hidePokemonsList;
+    that.hideArenasList = hideArenasList;
     that.save = save;
     that.cancel = cancel;
     that.edit = edit;
@@ -97,6 +103,8 @@ function logbookEntryController($scope, dateService, principalService, httpReque
                 }, function (error) {
                     $scope.mainController.showError('Eintrag konnte nicht gespeichert werden: ' + error);
                 });
+
+            resetnew();
         }
     }
 
@@ -192,16 +200,12 @@ function logbookEntryController($scope, dateService, principalService, httpReque
         var preview = '';
         var list = waypoints;
 
-        for (var i = 0; i < 2; i++){
+        for (var i = 0; i < waypoints.length; i++){
             if (i > waypoints.length - 1){
                 break;
             }
 
             preview += waypoints[i].locationName + ', ';
-        }
-
-        if (waypoints.length > 3){
-            preview += '...  '
         }
 
         $scope.waypointsPreview = preview.substring(0, preview.length - 2);
@@ -212,15 +216,15 @@ function logbookEntryController($scope, dateService, principalService, httpReque
         var preview = '';
         var list = arenas;
 
-        for (var i = 0; i < 2; i++){
+        for (var i = 0; i < arenas.length; i++){
             if (i > arenas.length - 1){
                 break;
             }
 
-            preview += arenas[i].locationName;
+            preview += arenas[i].locationName + ', ';
         }
 
-        $scope.arenasPreview = preview;
+        $scope.arenasPreview = preview.substring(0, preview.length - 2);
         $scope.arenasList = list;
     }
 
@@ -228,15 +232,15 @@ function logbookEntryController($scope, dateService, principalService, httpReque
         var preview = '';
         var list = pokemons;
 
-        for (var i = 0; i < 2; i++){
+        for (var i = 0; i < pokemons.length; i++){
             if (i > pokemons.length - 1){
                 break;
             }
 
-            preview += pokemons[i].name;
+            preview += pokemons[i].name + ', ';
         }
 
-        $scope.pokemonsPreview = preview;
+        $scope.pokemonsPreview = preview.substring(0, preview.length - 2);
         $scope.pokemonsList = list;
     }
 
@@ -250,6 +254,30 @@ function logbookEntryController($scope, dateService, principalService, httpReque
 
     function showPokemons(){
         $scope.showPokemons = true;
+    }
+
+    function showWaypointsList(){
+        $scope.showWaypointsList = true;
+    }
+
+    function hideWaypointsList(){
+        $scope.showWaypointsList = false;
+    }
+
+    function showPokemonsList(){
+        $scope.showPokemonsList = true;
+    }
+
+    function hidePokemonsList(){
+        $scope.showPokemonsList = false;
+    }
+
+    function showArenasList(){
+        $scope.showArenasList = true;
+    }
+
+    function hideArenasList(){
+        $scope.showArenasList = false;
     }
 }
 

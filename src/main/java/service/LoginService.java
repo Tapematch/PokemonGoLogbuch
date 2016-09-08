@@ -1,9 +1,8 @@
 package service;
 
-import dto.Identity;
-import model.Team;
 import model.User;
 import service.interfaces.ILoginService;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,13 +46,13 @@ public class LoginService implements ILoginService {
     }
 
     @Override
-    public boolean sessionIdIsValid(int userId, String sessionId) throws ReflectiveOperationException, SQLException {
+    public boolean sessionIdIsValid(String sessionId) throws ReflectiveOperationException, SQLException {
         boolean valid = false;
 
         Connection conn = DBHelper.getConnection();
         if(conn!=null) {
-            PreparedStatement select = conn.prepareStatement("SELECT SessionId FROM User WHERE Id=?");
-            select.setInt(1, userId);
+            PreparedStatement select = conn.prepareStatement("SELECT SessionId FROM User WHERE SessionId=?");
+            select.setString(1, sessionId);
             ResultSet rs = select.executeQuery();
             while (rs.next())
                 if (rs.getString(1).equals(sessionId)) {

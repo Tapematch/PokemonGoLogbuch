@@ -105,8 +105,8 @@ function mainController($scope, $state, httpRequestService, principalService, wa
     }
 
     function deleteArena(arena){
-        var index = arenaService.indexOf(arena, $scope.waypointsList);
-        $scope.waypointsList.splice(index, 1);
+        var index = arenaService.indexOf(arena, $scope.arenasList);
+        $scope.arenasList.splice(index, 1);
 
         $scope.activeArena = [];
         $scope.isNewArena = false;
@@ -186,7 +186,7 @@ function mainDirective(){
             activeWaypoint: '=?',
             isNewWaypoint: '=?'
         },
-        controller: ['$scope', '$state', 'httpRequestService', 'principalService', 'waypointService', mainController],
+        controller: ['$scope', '$state', 'httpRequestService', 'principalService', 'waypointService', 'arenaService', 'pokemonService', mainController],
         controllerAs: 'mainCtrl',
         templateUrl: 'main/template/main-template.html'
     }

@@ -1,5 +1,6 @@
 package api;
 
+import api.annotations.Secured;
 import service.LoginService;
 import service.interfaces.ILoginService;
 
@@ -16,6 +17,7 @@ public class LogoutResource {
     }
 
     @POST
+    @Secured
     @Path("/{id}")
     @Consumes("application/json")
     @Produces("application/json")
